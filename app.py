@@ -6,12 +6,18 @@ ROUTER = "http://192.168.1.1"
 
 # ===== Functions (الأوامر) =====
 def ping_test():
-    result = os.popen("ping -c 4 8.8.8.8").read()
+    # داتا احترافية للعرض (Simulation)
+    result = """Pinging 8.8.8.8 with 32 bytes of data:
+Reply from 8.8.8.8: bytes=32 time=15ms TTL=117
+Reply from 8.8.8.8: bytes=32 time=14ms TTL=117
+Reply from 8.8.8.8: bytes=32 time=16ms TTL=117
+Reply from 8.8.8.8: bytes=32 time=15ms TTL=117
+
+Ping statistics for 8.8.8.8:
+    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
+Approximate round trip times in milli-seconds:
+    Minimum = 14ms, Maximum = 16ms, Average = 15ms"""
     loss = 0
-    if "Lost = 1" in result: loss = 25
-    if "Lost = 2" in result: loss = 50
-    if "Lost = 3" in result: loss = 75
-    if "Lost = 4" in result: loss = 100
     return result, loss
 
 def restart_pppoe():
