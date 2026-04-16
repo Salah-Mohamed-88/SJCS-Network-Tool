@@ -6,7 +6,7 @@ ROUTER = "http://192.168.1.1"
 
 # ===== Functions (الأوامر) =====
 def ping_test():
-    result = os.popen("ping -n 4 8.8.8.8").read()
+    result = os.popen("ping -c 4 8.8.8.8").read()
     loss = 0
     if "Lost = 1" in result: loss = 25
     if "Lost = 2" in result: loss = 50
