@@ -20,8 +20,8 @@ col1.metric("Latency", f"{latency} ms")
 col2.metric("Jitter", f"{jitter} ms")
 
 
-if st.button("Run Auto Fix 🤖"):
-    st.warning("⚠️ Fixing...")
+st.button("Run Auto Fix 🤖", key="fix1")
+st.button("Run Auto Fix 🤖", key="fix2")
 
     # simulate improvement
     latency = 80
