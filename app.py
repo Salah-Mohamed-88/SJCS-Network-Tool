@@ -7,7 +7,14 @@ st.set_page_config(page_title="Network Optimizer", page_icon="🚀")
 
 st.title("Network Optimizer 🚀")
 
-# 2. وظيفة قياس البنج الحقيقي (طريقة الـ HTTP عشان تشتغل على GitHub)
+with st.sidebar:
+    st.header("🔑 Router Access")
+    router_ip = st.text_input("Router IP", value="192.168.1.1")
+    username = st.text_input("Username", value="admin")
+    password = st.text_input("Password", type="password")
+    
+    st.divider()
+    st.write("Current Device: **Huawei/DN Router**")# 2. وظيفة قياس البنج الحقيقي (طريقة الـ HTTP عشان تشتغل على GitHub)
 def get_real_ping():
     try:
         start_time = time.time()
