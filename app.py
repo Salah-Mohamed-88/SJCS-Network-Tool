@@ -24,4 +24,4 @@ if st.button("Run Auto Fix 🤖", key="fix_button"):
         # بنعرض النتائج جوه الـ container اللي حجزناه
         with message_container.container():
             st.info("📶 Network Quality: Excellent")
-            st.success(f"✅ Issue Resolved (Latency: {latency}ms | Jitter: {jitter}ms)")0
+            st.success(f"✅ Issue Resolved (Latency: {latency}ms | Jitter: {jitter}ms)")
