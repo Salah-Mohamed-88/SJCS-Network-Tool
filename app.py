@@ -58,7 +58,25 @@ if st.button("Run Auto Fix & Live Monitor 🤖", key="fix_button"):
             value=f"{latency} ms", 
             delta=f"{latency-60}ms" if latency > 0 else None, 
             delta_color="normal"
-        )
+      # انزل لآخر الملف خالص
+st.divider() 
+
+st.subheader("🛠️ Quick Fixes")
+c1, c2, c3 = st.columns(3)
+
+if c1.button("Restart Router 🔄"):
+    # هنا الكود بيسحب الـ password اللي أنت كتبته في الـ Sidebar فوق
+    if password: 
+        st.success(f"Attempting to reboot router at {router_ip}...")
+        # هنا بننادي الدالة اللي عرفناها فوق
+    else:
+        st.error("Please enter router password in sidebar!")
+
+if c2.button("Optimize MTU ⚡"):
+    st.info("MTU optimization starting...")
+
+if c3.button("Apply QoS 🎮"):
+    st.warning("QoS feature is being configured for your DN router.")  )
         col2.metric(
             label="Jitter", 
             value=f"{jitter} ms", 
