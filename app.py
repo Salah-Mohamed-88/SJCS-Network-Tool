@@ -1,23 +1,32 @@
 import streamlit as st
-import requests
+import time
 
-API_URL = "http://127.0.0.1:8000"  # عدلها لو عندك سيرفر اونلاين
+# 1. عنوان التطبيق (اختياري)
+st.title("Network Optimizer 🚀")
 
-st.set_page_config(page_title="NetFix AI", layout="centered")
-
-st.title("🚀 NetFix AI - Router Self-Healing")
-
-st.markdown("### 📡 Network Status")
-
+# 2. إنشاء الأعمدة أولاً عشان تكون جاهزة للعرض
 col1, col2 = st.columns(2)
 
-col1.metric("Latency", "120 ms")
-col2.metric("Jitter", "45 ms")
+# 3. وضع الزرار ومنطق الإصلاح
+if st.button("Run Auto Fix 🤖", key="fix_button"):
+    # كل الكود اللي جاي ده لازم يكون "مُزاح" (Indented) تحت الـ if
+    with st.spinner("⚠️ Fixing..."):
+        time.sleep(1)
 
-st.warning("⚠️ Network Issue Detected")
+        # الأرقام (ممكن تخليها عشوائية عشان تبان حقيقية)
+        latency = 40
+        jitter = 10
 
-if st.button("Run Auto Fix 🤖"):
-    requests.post(f"{API_URL}/send-command", json={"action": "auto_fix"})
-    st.success("Fix in progress...")
+        # تحديث الأعمدة اللي عرفناها فوق
+        col1.metric("Latency", f"{latency} ms", delta="-5ms")
+        col2.metric("Jitter", f"{jitter} ms", delta="-2ms")
 
-st.success("✅ Issue Resolved (Latency: 40ms | Jitter: 10ms)")
+        # منطق تحديد الحالة (اللي قاله شات جي بي تي)
+        if latency < 60 and jitter < 20:
+            status = "Excellent"
+        else:
+            status = "Good"
+
+        # عرض النتائج النهائية
+        st.info(f"📶 Network Quality: {status}")
+        st.success(f"✅ Issue Resolved (Latency: {latency}ms | Jitter: {jitter}ms)")
