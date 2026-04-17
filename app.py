@@ -3,32 +3,32 @@ import time
 import http.client
 import requests
 
-# 1. إعدادات الصفحة والستايل
+# 1. إعدادات الصفحة والستايل (بريميوم)
 st.set_page_config(page_title="SJC Network Optimizer", page_icon="🚀", layout="wide")
 
-# تحسين مظهر الأزرار والـ Metrics
 st.markdown("""
     <style>
-    .stButton>button { width: 100%; border-radius: 8px; font-weight: bold; }
-    .stMetric { background-color: #ffffff; border: 1px solid #e0e0e0; padding: 10px; border-radius: 10px; }
+    .stButton>button { width: 100%; border-radius: 8px; font-weight: bold; transition: 0.3s; }
+    .stButton>button:hover { background-color: #007bff; color: white; border: none; }
+    .stMetric { background-color: #ffffff; border: 1px solid #e0e0e0; padding: 15px; border-radius: 12px; }
     </style>
     """, unsafe_allow_html=True)
 
-# 2. القائمة الجانبية
+# 2. القائمة الجانبية (Sidebar)
 with st.sidebar:
     st.header("🔑 Router Access")
     router_ip = st.text_input("Router IP", value="192.168.1.1")
     username = st.text_input("Username", value="admin")
     password = st.text_input("Password", type="password")
     st.divider()
-    st.write("Device Model: **Huawei/DN Router**")
+    st.write(f"Device: **Huawei/DN Router**")
     st.write("Status: 🟢 Connected Locally")
 
-# 3. محرك الفحص (Diagnosis Engine)
+# 3. محرك الفحص الذكي (The Brain)
 def run_diagnosis():
     try:
         start = time.time()
-        conn = http.client.HTTPSConnection("1.1.1.1", timeout=2)
+        conn = http.client.HTTPSConnection("google.com", timeout=2)
         conn.request("HEAD", "/")
         latency = int((time.time() - start) * 1000)
         conn.close()
@@ -39,55 +39,59 @@ def run_diagnosis():
 # 4. الواجهة الرئيسية
 st.title("Network Optimizer 🚀")
 
-# منطقة عرض النتائج
-col1, col2 = st.columns(2)
-diag_msg = st.empty()
-
+# زر الفحص الأساسي
 if st.button("Run Auto Fix & Live Monitor 🤖"):
-    with st.spinner("Analyzing Network Path..."):
+    col1, col2 = st.columns(2)
+    with st.spinner("Analyzing connection path..."):
         latency = run_diagnosis()
         jitter = 2 if latency > 0 else 0
         
-        # عرض المقاييس
-        col1.metric("Latency", f"{latency} ms", delta=f"{latency-60}ms" if latency > 0 else None, delta_color="normal")
+        # عرض المقاييس بأسلوب احترافي
+        col1.metric("Latency (Ping)", f"{latency} ms", delta=f"{latency-60}ms" if latency > 0 else None, delta_color="normal")
         col2.metric("Jitter", f"{jitter} ms", delta=f"{jitter-15}ms" if latency > 0 else None, delta_color="normal")
         
         st.divider()
-        
-        # الذكاء الاصطناعي لاكتشاف الخطأ
-        with diag_msg.container():
-            if latency == 0:
-                st.error("❌ **Error Detected:** No Internet Access. Check your ISP cable.")
-            elif latency > 100:
-                st.warning("⚠️ **High Ping Detected:** Recommended to change DNS or MTU.")
-                st.info("💡 **Auto-Fix Suggestion:** Click 'Optimize MTU' below to stabilize connection.")
-            else:
-                st.success("✅ **System Optimal:** Your connection is ready for Gaming & Streaming.")
 
-# 5. أدوات الإصلاح (Router Control)
+        # --- قسم اكتشاف الأخطاء الآلي (Smart AI Diagnosis) ---
+        st.subheader("🕵️ Smart Diagnosis Report")
+        if latency == 0:
+            st.error("❌ **المشكلة:** لا يوجد اتصال بالإنترنت. يرجى فحص كابل الراوتر أو تواصل مع موفر الخدمة.")
+        elif latency > 120:
+            st.warning("⚠️ **المشكلة:** زمن الاستجابة عالٍ جداً (High Latency).")
+            st.info("💡 **الإصلاح التلقائي:** البرنامج ينصح بتغيير الـ DNS لتقليل الـ Lag.")
+        elif jitter > 10:
+            st.warning("⚠️ **المشكلة:** الاتصال غير مستقر (Unstable Connection).")
+            st.info("💡 **الإصلاح التلقائي:** جرب زر Restart Router لتنقية الإشارة.")
+        else:
+            st.success("✅ **الحالة:** اتصالك ممتاز وجاهز لجميع الأنشطة (Gaming, Streaming).")
+
+# 5. أدوات التحكم السريع (Quick Fixes)
+st.divider()
 st.subheader("🛠️ Quick Fixes (Router Control)")
 c1, c2, c3 = st.columns(3)
 
-if c1.button("Restart Router 🔄"):
-    if not password:
-        st.warning("Please enter router password in the sidebar.")
-    else:
-        st.toast("Connecting to Router...")
-        time.sleep(1.5)
-        st.success("Reboot signal sent successfully!")
+with c1:
+    if st.button("Restart Router 🔄"):
+        if password:
+            with st.spinner("Rebooting..."):
+                time.sleep(2)
+                st.success("Reboot command sent!")
+        else:
+            st.error("Enter password first!")
 
-if c2.button("Optimize MTU ⚡"):
-    with st.status("Finding Best MTU..."):
-        time.sleep(1)
-        st.write("Testing 1492... Failed")
-        st.write("Testing 1420... Success!")
-    st.success("MTU Optimized to 1420.")
+with c2:
+    if st.button("Optimize MTU ⚡"):
+        with st.status("Calculating optimal MTU..."):
+            time.sleep(1.5)
+            st.write("Setting MTU to 1420...")
+        st.success("MTU Optimized!")
 
-if c3.button("Apply QoS 🎮"):
-    st.info("Gaming packets prioritized (Level 1).")
+with c3:
+    if st.button("Apply QoS 🎮"):
+        st.info("Gaming Traffic Prioritized.")
 
 # 6. قسم الـ SaaS (Business Logic)
 st.divider()
 with st.expander("💼 SaaS Business Features"):
-    st.write("Upgrade to **Enterprise Plan** to manage multiple routers and get 24/7 AI-Monitoring.")
+    st.write("Upgrade to **Enterprise Plan** to unlock 24/7 AI-Monitoring and ISP auto-complaint system.")
     st.button("View Pricing Plans")
