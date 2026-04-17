@@ -25,7 +25,19 @@ def get_real_ping():
         return int((end_time - start_time) * 1000)
     except:
         return 0
+def login_to_router(ip, user, pwd):
+    url = f"http://{ip}/asp/login.asp"
+    try:
+        # دي محاكاة للدخول، في الحقيقة بنحتاج نبعت الـ Session
+        session = requests.Session()
+        return session
+    except:
+        return None
 
+def reboot_router(session, ip):
+    # مسار الريبوت لراوترات هواوي/DN
+    url = f"http://{ip}/api/system/reboot"
+    return True # تجريبي حالياً
 # 3. بناء الواجهة (الأعمدة)
 col1, col2 = st.columns(2)
 message_container = st.empty() # ده عشان يمسح الرسايل القديمة وميكررهاش
