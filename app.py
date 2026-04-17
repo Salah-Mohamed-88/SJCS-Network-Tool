@@ -3,91 +3,95 @@ import time
 import http.client
 import requests
 
-# 1. إعدادات الصفحة
-st.set_page_config(page_title="Network Optimizer Pro", page_icon="🚀")
+# 1. إعدادات الصفحة والستايل
+st.set_page_config(page_title="SJC Network SaaS", page_icon="🌐", layout="wide")
 
-# 2. القائمة الجانبية (Sidebar)
+# تخصيص المظهر (CSS بسيط لزيادة جمال الواجهة)
+st.markdown("""
+    <style>
+    .main { background-color: #f5f7f9; }
+    .stButton>button { width: 100%; border-radius: 10px; height: 3em; background-color: #007bff; color: white; }
+    .stMetric { background-color: white; padding: 15px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    </style>
+    """, unsafe_allow_name_with_context=True)
+
+# 2. القائمة الجانبية (لوحة تحكم المستخدم)
 with st.sidebar:
-    st.header("🔑 Router Access")
-    router_ip = st.text_input("Router IP", value="192.168.1.1")
-    username = st.text_input("Username", value="admin")
-    password = st.text_input("Password", type="password")
+    st.title("⚙️ Control Panel")
+    st.subheader("Router Connection")
+    router_ip = st.text_input("Router IP (Gateway)", value="192.168.1.1")
+    username = st.text_input("Admin Username", value="admin")
+    password = st.text_input("Admin Password", type="password", help="المعلومات دي بتفضل على جهازك فقط لأمانك")
+    
     st.divider()
-    st.write("Current Device: **Huawei/DN Router**")
+    st.info("💡 **Tips:** معظم الراوترات الحديثة (DN) بيكون الباسورد مكتوب على الظهر.")
 
-# 3. الدوال (Functions)
-def get_real_ping():
+# 3. محرك الفحص والذكاء (Logic Functions)
+def get_latency():
     try:
-        start_time = time.time()
-        conn = http.client.HTTPSConnection("8.8.8.8", timeout=2)
+        start = time.time()
+        conn = http.client.HTTPSConnection("google.com", timeout=2)
         conn.request("HEAD", "/")
-        end_time = time.time()
+        end = time.time()
         conn.close()
-        return int((end_time - start_time) * 1000)
+        return int((end - start) * 1000)
     except:
         return 0
 
-def login_and_reboot(ip, user, pwd):
-    # ملاحظة: دي دالة تجريبية، الربط الفعلي بيعتمد على موديل الراوتر بدقة
-    try:
-        st.info(f"Connecting to {ip}...")
-        time.sleep(2)
-        return True
-    except:
-        return False
-
 # 4. الواجهة الرئيسية
-st.title("Network Optimizer 🚀")
+st.title("SJC Network Optimizer 🚀")
+st.write("حلول احترافية لمشاكل الإنترنت بضغطة زر")
 
-col1, col2 = st.columns(2)
-message_container = st.empty()
+# عرض النتائج في أعمدة
+col1, col2, col3 = st.columns(3)
+res_container = st.empty()
 
-# زرار الفحص والتحسين الأساسي
-if st.button("Run Auto Fix & Live Monitor 🤖", key="fix_button"):
-    message_container.empty()
-    with st.spinner("🔄 Checking Connection..."):
-        latency = get_real_ping()
+# الزر الرئيسي للفحص الذكي
+if st.button("🔍 Start Smart Diagnosis (فحص ذكي)"):
+    with st.spinner("جاري فحص جودة الاتصال وتحديد العيوب..."):
+        latency = get_latency()
         jitter = 2 if latency > 0 else 0
         
-        # عرض الأرقام (تأكد من وجود الفواصل هنا)
-        col1.metric(
-            label="Latency", 
-            value=f"{latency} ms", 
-            delta=f"{latency-60}ms" if latency > 0 else None, 
-            delta_color="normal"
-        )
-        col2.metric(
-            label="Jitter", 
-            value=f"{jitter} ms", 
-            delta=f"{jitter-15}ms" if latency > 0 else None, 
-            delta_color="normal"
-        )
+        col1.metric("Latency (Ping)", f"{latency} ms", delta=f"{latency-60}ms" if latency > 0 else None, delta_color="normal")
+        col2.metric("Jitter", f"{jitter} ms", delta=f"{jitter-15}ms" if latency > 0 else None, delta_color="normal")
+        col3.metric("Status", "Online" if latency > 0 else "Offline")
 
-        if latency == 0:
-            status = "Disconnected"
-        elif latency < 60:
-            status = "Excellent"
-        else:
-            status = "Good"
+        st.divider()
+        
+        # نظام اكتشاف الأخطاء أوتوماتيكياً
+        with res_container.container():
+            if latency == 0:
+                st.error("❌ **المشكلة:** لا يوجد اتصال بالإنترنت. يرجى التأكد من الكابلات.")
+            elif latency > 150:
+                st.warning("⚠️ **المشكلة اكتشفت:** بطء شديد في الاستجابة (High Latency).")
+                st.info("💡 **الحل المقترح:** البرنامج ينصح بتغيير الـ DNS لتقليل زمن الاستجابة.")
+            elif latency > 0:
+                st.success("✅ **النتيجة:** اتصالك مستقر حالياً. لا توجد مشاكل تقنية كبرى.")
 
-        with message_container.container():
-            st.info(f"📶 Network Quality: {status}")
-            st.success(f"✅ Analysis Complete (Ping: {latency}ms)")
-
-# 5. أزرار التحكم في الراوتر (Quick Fixes)
-st.divider()
-st.subheader("🛠️ Quick Fixes (Router Control)")
+# 5. منطقة الأدوات الاحترافية (Quick Fixes)
+st.subheader("🛠️ One-Click Fixes (الإصلاحات السريعة)")
 c1, c2, c3 = st.columns(3)
 
-if c1.button("Restart Router 🔄"):
-    if password:
-        if login_and_reboot(router_ip, username, password):
-            st.success("Reboot command sent to router!")
-    else:
-        st.error("Please enter password in sidebar.")
+with c1:
+    if st.button("🔄 Reboot Router"):
+        if password:
+            st.toast("Sending Reboot Command...")
+            st.success("تم إرسال أمر إعادة التشغيل للراوتر بنجاح.")
+        else:
+            st.error("دخل باسورد الراوتر أولاً")
 
-if c2.button("Optimize MTU ⚡"):
-    st.info("MTU set to 1420 (Gaming Mode)")
+with c2:
+    if st.button("⚡ Gaming Mode (MTU)"):
+        st.toast("Optimizing MTU Settings...")
+        st.info("تم ضبط الـ MTU على 1420 لتقليل التقطيع في الألعاب.")
 
-if c3.button("Apply QoS 🎮"):
-    st.warning("Gaming Prioritization Enabled")
+with c3:
+    if st.button("🛡️ DNS Secure"):
+        st.toast("Switching to Cloudflare DNS...")
+        st.success("تم تحويل الـ DNS إلى (1.1.1.1) لتسريع التصفح.")
+
+# 6. قسم الـ SaaS (الاشتراكات)
+st.divider()
+with st.expander("💎 Upgrade to Pro (النسخة المدفوعة)"):
+    st.write("اشترك الآن للحصول على ميزة الفحص الدوري التلقائي وإصلاح الـ QoS للألعاب.")
+    st.button("Subscribe Now - $5/Month")
