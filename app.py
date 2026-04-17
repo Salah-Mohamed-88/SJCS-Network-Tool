@@ -33,9 +33,10 @@ if st.button("Run Auto Fix & Live Monitor 🤖", key="fix_button"):
         # عمل رقم عشوائي بسيط للـ Jitter لإعطاء واقعية (بما أن القياس لحظي)
         jitter = 2 if latency > 0 else 0 
         
-# delta_color="normal" بتخلي الرقم السالب (التحسن) لونه أخضر
-col1.metric("Latency", f"{latency} ms", delta=f"{latency-60}ms" if latency > 0 else None, delta_color="normal")
-col2.metric("Jitter", f"{jitter} ms", delta=f"{jitter-15}ms" if latency > 0 else None, delta_color="normal")
+        # تحديث الأرقام في الأعمدة
+        # delta_color="normal" مع رقم سالب يخلي اللون أخضر
+        col1.metric("Latency", f"{latency} ms", delta=f"{latency-60}ms" if latency > 0 else None, delta_color="normal")
+        col2.metric("Jitter", f"{jitter} ms", delta=f"{jitter-15}ms" if latency > 0 else None, delta_color="normal")
 
         # 5. منطق تحديد الحالة (Logic)
         if latency == 0:
@@ -57,4 +58,4 @@ col2.metric("Jitter", f"{jitter} ms", delta=f"{jitter-15}ms" if latency > 0 else
             if latency > 0:
                 st.success(info_msg)
             else:
-                st.error(info_msg)عرض النتا0
+                st.error(info_msg)
