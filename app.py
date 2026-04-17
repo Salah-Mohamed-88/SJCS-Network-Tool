@@ -2,15 +2,15 @@ import streamlit as st
 import time
 import http.client
 
-# 1. إعدادات الصفحة
+# 1. إعدادات الصفحة (بتظهر في التاب بتاع المتصفح)
 st.set_page_config(page_title="Network Optimizer", page_icon="🚀")
+
 st.title("Network Optimizer 🚀")
 
-# 2. تعريف دالة القياس الجديدة (عشان تشتغل على GitHub)
+# 2. وظيفة قياس البنج الحقيقي (طريقة الـ HTTP عشان تشتغل على GitHub)
 def get_real_ping():
     try:
         start_time = time.time()
-        # محاولة الاتصال بسيرفر جوجل (طريقة مسموحة على السيرفرات)
         conn = http.client.HTTPSConnection("8.8.8.8", timeout=2)
         conn.request("HEAD", "/")
         end_time = time.time()
@@ -19,43 +19,52 @@ def get_real_ping():
     except:
         return 0
 
-# 3. تجهيز المكان في الواجهة
+# 3. بناء الواجهة (الأعمدة)
 col1, col2 = st.columns(2)
-message_container = st.empty()
+message_container = st.empty() # ده عشان يمسح الرسايل القديمة وميكررهاش
 
-# 4. زر التشغيل
+# 4. زر التشغيل والمنطق
 if st.button("Run Auto Fix & Live Monitor 🤖", key="fix_button"):
+    # تنظيف الشاشة من أي رسائل قديمة أول ما ندوس
     message_container.empty()
     
-    with st.spinner("🔄 Measuring Live Connection..."):
-        # قياس حقيقي
+    with st.spinner("🔄 Checking Connection..."):
         latency = get_real_ping()
-        # عمل رقم عشوائي بسيط للـ Jitter لإعطاء واقعية (بما أن القياس لحظي)
         jitter = 2 if latency > 0 else 0 
         
-        # تحديث الأرقام في الأعمدة
-        # delta_color="normal" مع رقم سالب يخلي اللون أخضر
-        col1.metric("Latency", f"{latency} ms", delta=f"{latency-60}ms" if latency > 0 else None, delta_color="normal")
-        col2.metric("Jitter", f"{jitter} ms", delta=f"{jitter-15}ms" if latency > 0 else None, delta_color="normal")
+        # عرض الأرقام في الأعمدة
+        # لاحظ استخدام delta_color="normal" عشان السهم السالب يبقى أخضر
+        col1.metric(
+            label="Latency", 
+            value=f"{latency} ms", 
+            delta=f"{latency-60}ms" if latency > 0 else None, 
+            delta_color="normal"
+        )
+        col2.metric(
+            label="Jitter", 
+            value=f"{jitter} ms", 
+            delta=f"{jitter-15}ms" if latency > 0 else None, 
+            delta_color="normal"
+        )
 
-        # 5. منطق تحديد الحالة (Logic)
+        # تحديد الحالة بناءً على الرقم اللي طلع
         if latency == 0:
             status = "Disconnected"
-            info_msg = "❌ Could not reach DNS. Check internet."
+            info_text = "❌ Connection Failed."
         elif latency < 60:
             status = "Excellent"
-            info_msg = f"✅ Connection Verified (Ping: {latency}ms)"
+            info_text = f"✅ Connection Optimized (Ping: {latency}ms)"
         elif latency < 100:
             status = "Good"
-            info_msg = f"✅ Connection is Stable (Ping: {latency}ms)"
+            info_text = f"✅ Stable Connection (Ping: {latency}ms)"
         else:
             status = "Poor"
-            info_msg = "⚠️ High Latency Detected."
+            info_text = "⚠️ High Latency detected."
 
-        # 6. عرض النتائج النهائية
+        # 5. عرض النتائج النهائية جوه الـ container عشان تظهر مرة واحدة
         with message_container.container():
             st.info(f"📶 Network Quality: {status}")
             if latency > 0:
-                st.success(info_msg)
+                st.success(info_text)
             else:
-                st.error(info_msg)
+                st.error(info_text)
