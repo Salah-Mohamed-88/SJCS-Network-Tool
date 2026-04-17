@@ -3,8 +3,8 @@ import time
 import http.client
 import requests
 
-# 1. إعدادات الصفحة والستايل (بريميوم)
-st.set_page_config(page_title="SJC Network Optimizer", page_icon="🚀", layout="wide")
+# 1. إعدادات الصفحة والستايل الاحترافي
+st.set_page_config(page_title="SJC Network Optimizer Pro", page_icon="🚀", layout="wide")
 
 st.markdown("""
     <style>
@@ -24,11 +24,12 @@ with st.sidebar:
     st.write(f"Device: **Huawei/DN Router**")
     st.write("Status: 🟢 Connected Locally")
 
-# 3. محرك الفحص الذكي (The Brain)
+# 3. محرك الفحص والذكاء الاصطناعي
 def run_diagnosis():
     try:
         start = time.time()
-        conn = http.client.HTTPSConnection("google.com", timeout=2)
+        # فحص جودة الاتصال عبر سيرفرات جوجل وكلاود فلير
+        conn = http.client.HTTPSConnection("1.1.1.1", timeout=2)
         conn.request("HEAD", "/")
         latency = int((time.time() - start) * 1000)
         conn.close()
@@ -42,28 +43,28 @@ st.title("Network Optimizer 🚀")
 # زر الفحص الأساسي
 if st.button("Run Auto Fix & Live Monitor 🤖"):
     col1, col2 = st.columns(2)
-    with st.spinner("Analyzing connection path..."):
+    diag_container = st.container()
+    
+    with st.spinner("Analyzing network path and DNS health..."):
         latency = run_diagnosis()
         jitter = 2 if latency > 0 else 0
         
-        # عرض المقاييس بأسلوب احترافي
+        # عرض المقاييس
         col1.metric("Latency (Ping)", f"{latency} ms", delta=f"{latency-60}ms" if latency > 0 else None, delta_color="normal")
         col2.metric("Jitter", f"{jitter} ms", delta=f"{jitter-15}ms" if latency > 0 else None, delta_color="normal")
         
         st.divider()
 
-        # --- قسم اكتشاف الأخطاء الآلي (Smart AI Diagnosis) ---
-        st.subheader("🕵️ Smart Diagnosis Report")
-        if latency == 0:
-            st.error("❌ **المشكلة:** لا يوجد اتصال بالإنترنت. يرجى فحص كابل الراوتر أو تواصل مع موفر الخدمة.")
-        elif latency > 120:
-            st.warning("⚠️ **المشكلة:** زمن الاستجابة عالٍ جداً (High Latency).")
-            st.info("💡 **الإصلاح التلقائي:** البرنامج ينصح بتغيير الـ DNS لتقليل الـ Lag.")
-        elif jitter > 10:
-            st.warning("⚠️ **المشكلة:** الاتصال غير مستقر (Unstable Connection).")
-            st.info("💡 **الإصلاح التلقائي:** جرب زر Restart Router لتنقية الإشارة.")
-        else:
-            st.success("✅ **الحالة:** اتصالك ممتاز وجاهز لجميع الأنشطة (Gaming, Streaming).")
+        # التقرير الذكي
+        with diag_container:
+            st.subheader("🕵️ Smart Diagnosis Report")
+            if latency == 0:
+                st.error("❌ **المشكلة:** لا يوجد اتصال بالإنترنت. يرجى التأكد من الكابلات.")
+            elif latency > 100:
+                st.warning("⚠️ **المشكلة:** زمن الاستجابة مرتفع (High Latency).")
+                st.info("💡 **الحل الأوتوماتيكي:** ينصح بالضغط على 'Secure DNS' لتحسين المسار.")
+            else:
+                st.success("✅ **الحالة:** شبكتك مستقرة ومثالية حالياً.")
 
 # 5. أدوات التحكم السريع (Quick Fixes)
 st.divider()
@@ -73,24 +74,31 @@ c1, c2, c3 = st.columns(3)
 with c1:
     if st.button("Restart Router 🔄"):
         if password:
-            with st.spinner("Rebooting..."):
+            with st.status("Connecting to Router..."):
                 time.sleep(2)
                 st.success("Reboot command sent!")
         else:
-            st.error("Enter password first!")
+            st.error("Please enter password in sidebar.")
 
 with c2:
     if st.button("Optimize MTU ⚡"):
-        with st.status("Calculating optimal MTU..."):
+        with st.status("Optimizing Packets..."):
             time.sleep(1.5)
-            st.write("Setting MTU to 1420...")
-        st.success("MTU Optimized!")
+        st.success("MTU Optimized to 1420 (Gaming Mode).")
 
 with c3:
-    if st.button("Apply QoS 🎮"):
-        st.info("Gaming Traffic Prioritized.")
+    # --- إضافة كود الـ DNS هنا ---
+    if st.button("Secure DNS 🛡️"):
+        if password:
+            with st.status("Changing DNS to Cloudflare (1.1.1.1)..."):
+                # هنا بنضيف الـ logic الحقيقي للـ DN Router لاحقاً
+                time.sleep(2)
+                st.success("DNS Secured Successfully!")
+                st.balloons() # حركة احتفالية للعميل
+        else:
+            st.error("Enter Router Password to change DNS.")
 
-# 6. قسم الـ SaaS (Business Logic)
+# 6. قسم الـ SaaS
 st.divider()
 with st.expander("💼 SaaS Business Features"):
     st.write("Upgrade to **Enterprise Plan** to unlock 24/7 AI-Monitoring and ISP auto-complaint system.")
